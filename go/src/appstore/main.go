@@ -13,5 +13,7 @@ func main() {
 	
 	backend.InitElasticsearchBackend()
 
+	backend.InitGCSBackend()
+
     log.Fatal(http.ListenAndServe(":8080", handler.InitRouter()))
 }
