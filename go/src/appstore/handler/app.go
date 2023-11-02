@@ -8,12 +8,19 @@ import (
 
 	"appstore/model"
 	"appstore/service"
+
+    jwt "github.com/form3tech-oss/jwt-go"
     "github.com/pborman/uuid"
 )
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
     // Parse from body of request to get a json object.
     fmt.Println("Received one upload request")
+
+    token := r.Context().Value("user")
+    claims := token.(*jwt.Token).Claims
+    username := claims.(jwt.MapClaims)["username"]
+
     // decoder := json.NewDecoder(r.Body)
     // var app model.App
     // if err := decoder.Decode(&app); err != nil {
@@ -27,7 +34,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
     
     app := model.App{
         Id: uuid.New(),
-        User: r.FormValue("user"),
+        User: username.(string),
         Title: r.FormValue("title"),
         Description: r.FormValue("description"),
     }
