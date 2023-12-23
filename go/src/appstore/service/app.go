@@ -138,3 +138,12 @@ func getAppFromSearchResult(searchResult *elastic.SearchResult) []model.App {
    }
    return apps
 }
+
+
+func DeleteApp(id string, user string) error {
+    query := elastic.NewBoolQuery()
+    query.Must(elastic.NewTermQuery("id", id))
+    query.Must(elastic.NewTermQuery("user", user))
+
+    return backend.ESBackend.DeleteFromES(query, constants.APP_INDEX)
+}

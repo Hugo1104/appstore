@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-    "strconv"
+	"strconv"
 
 	"appstore/model"
 	"appstore/service"
 
-    jwt "github.com/form3tech-oss/jwt-go"
-    "github.com/pborman/uuid"
+	jwt "github.com/form3tech-oss/jwt-go"
+	"github.com/gorilla/mux"
+	"github.com/pborman/uuid"
 )
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
@@ -91,7 +92,23 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
     w.Write(js)
- }
+}
+
+func deleteHandler(w http.ResponseWriter, r *http.Request) {
+    fmt.Println("Received one request for delete")
+
+    user := r.Context().Value("user")
+    claims := user.(*jwt.Token).Claims
+    username := claims.(jwt.MapClaims)["username"].(string)
+    id := mux.Vars(r)["id"]
+
+    if err := service.DeleteApp(id, username); err != nil {
+        http.Error(w, "Failed to delete app from backend", http.StatusInternalServerError)
+        fmt.Printf("Failed to delete app from backend %v\n", err)
+        return
+    }
+    fmt.Println("App is deleted successfully")
+}
 
 
  func checkoutHandler(w http.ResponseWriter, r *http.Request) {
@@ -110,6 +127,6 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
     w.Write([]byte(url))
  
     fmt.Println("Checkout process started!")
- }
+}
  
  
