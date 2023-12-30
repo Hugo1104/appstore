@@ -1,0 +1,10 @@
+elasticsearch:
+  address: "http://10.128.0.2:9200"
+  username: "hugoyin1104"
+  password: "YINzhexuan11047"
+
+gcs:
+  bucket: "appstore_hy"
+
+token:
+  secret: "secret"
